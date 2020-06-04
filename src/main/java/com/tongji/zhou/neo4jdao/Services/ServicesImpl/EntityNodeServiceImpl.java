@@ -3,11 +3,14 @@ package com.tongji.zhou.neo4jdao.Services.ServicesImpl;
 import com.tongji.zhou.neo4jdao.Entity.LinkedNodeInfo;
 import com.tongji.zhou.neo4jdao.Entity.Neo4jNode;
 import com.tongji.zhou.neo4jdao.Entity.NodeRelation;
+import com.tongji.zhou.neo4jdao.Entity.QueryEntity;
 import com.tongji.zhou.neo4jdao.Repository.EntityRepository;
 import com.tongji.zhou.neo4jdao.Services.IEntityNodeService;
+import org.neo4j.driver.types.Path;
+import org.neo4j.driver.types.Relationship;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+import org.neo4j.driver.internal.InternalPath.SelfContainedSegment;
 import java.util.*;
 
 @Service("EntityNodeService")
@@ -33,6 +36,23 @@ public class EntityNodeServiceImpl implements IEntityNodeService {
             entityRepository.save(main_node);
         }
         return true;
+    }
+
+    @Override
+    public List<List<Integer>> queryPathByTwoNode(QueryEntity entity) {
+        Iterable<Map<String,Object>> iterable =entityRepository.getRelation(entity);
+        List<List<Integer>> result = new ArrayList<>();
+        for(Map<String,Object> row:iterable){
+            List<Integer> tmp_path=new ArrayList<>();
+            tmp_path.add(entity.getStart());
+            Path.Segment[] path= (Path.Segment[]) row.get("p");
+            for(Path.Segment segment:path){
+                Map<String, Object> map=segment.end().asMap();
+                tmp_path.add(Integer.valueOf(map.get("entityId").toString()));
+            }
+            result.add(tmp_path);
+        }
+        return result;
     }
 
     private void checkId(Long id){

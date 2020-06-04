@@ -5,6 +5,7 @@ import com.tongji.zhou.neo4jdao.Services.IEntityNodeService;
 import com.tongji.zhou.neo4jdao.Services.IOuterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -25,10 +26,10 @@ public class ETLController {
         return "OK";
     }
 
-    @GetMapping("/startETL")
-    public String startEtl(){
+    @GetMapping("/startETL/{start_num}")
+    public String startEtl(@PathVariable int start_num){
         try{
-            int start_from=1;
+            int start_from=start_num;
             int length=200;
             int end_id=outerService.getMaxId();
             while(start_from<=end_id){
