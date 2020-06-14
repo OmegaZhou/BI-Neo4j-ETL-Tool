@@ -25,7 +25,6 @@ public class EntityNodeServiceImpl implements IEntityNodeService {
         if(list==null || list.size()==0){
             return false;
         }
-        List batch=new ArrayList();
         for(LinkedNodeInfo info :list){
             checkId(info.getId());
             Neo4jNode main_node = entityRepository.findByEntityId(info.getId());
@@ -40,7 +39,18 @@ public class EntityNodeServiceImpl implements IEntityNodeService {
 
     @Override
     public List<List<Integer>> queryPathByTwoNode(QueryEntity entity) {
-        Iterable<Map<String,Object>> iterable =entityRepository.getRelation(entity);
+        Iterable<Map<String,Object>> iterable;
+        switch (entity.getMax_jump_num()){
+            case 1: case 2:
+                iterable=entityRepository.getRelation2(entity);
+                break;
+            case 3:
+                iterable=entityRepository.getRelation3(entity);
+                break;
+            default:
+                iterable=entityRepository.getRelation4(entity);
+                break;
+        }
         List<List<Integer>> result = new ArrayList<>();
         for(Map<String,Object> row:iterable){
             List<Integer> tmp_path=new ArrayList<>();

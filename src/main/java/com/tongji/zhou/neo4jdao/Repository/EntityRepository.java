@@ -16,7 +16,15 @@ public interface EntityRepository extends Neo4jRepository<Neo4jNode, Long> {
     Neo4jNode findByEntityId(Long entityId);
 
     @Query("match p=(n:Neo4jNode{entityId::#{#entity.start}})" +
-            "-[:LinkedNode*2..4]->(b:Neo4jNode{entityId::#{#entity.end}})" +
+            "-[:LinkedNode*1..4]->(b:Neo4jNode{entityId::#{#entity.end}})" +
             " return p skip :#{#entity.skip_num} limit :#{#entity.limit_num}")
-    Iterable<Map<String, Object>> getRelation(@Param("entity") QueryEntity entity);
+    Iterable<Map<String, Object>> getRelation4(@Param("entity") QueryEntity entity);
+    @Query("match p=(n:Neo4jNode{entityId::#{#entity.start}})" +
+            "-[:LinkedNode*1..3]->(b:Neo4jNode{entityId::#{#entity.end}})" +
+            " return p skip :#{#entity.skip_num} limit :#{#entity.limit_num}")
+    Iterable<Map<String, Object>> getRelation3(@Param("entity") QueryEntity entity);
+    @Query("match p=(n:Neo4jNode{entityId::#{#entity.start}})" +
+            "-[:LinkedNode*1..2]->(b:Neo4jNode{entityId::#{#entity.end}})" +
+            " return p skip :#{#entity.skip_num} limit :#{#entity.limit_num}")
+    Iterable<Map<String, Object>> getRelation2(@Param("entity") QueryEntity entity);
 }

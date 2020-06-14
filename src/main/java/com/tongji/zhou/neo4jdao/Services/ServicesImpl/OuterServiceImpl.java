@@ -25,7 +25,7 @@ public class OuterServiceImpl implements IOuterService {
             List<Map<String,Object>> links= (List<Map<String, Object>>) item.get("links");
             List<Long> tmp_links=new ArrayList<>();
             for(Map<String,Object> link : links){
-                tmp_links.add(Long.valueOf(link.get("uniqueId").toString()));
+                tmp_links.add(Long.valueOf(link.get("u").toString()));
             }
             info.setLinked_ids(tmp_links);
             result.add(info);
